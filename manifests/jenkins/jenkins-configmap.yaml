@@ -1,0 +1,38 @@
+apiVersion: v1 
+kind: ConfigMap 
+metadata: 
+  name: mvn-settings
+  namespace: kube-devops
+  labels: 
+    app: jenkins-server
+data: 
+  settings.xml: |- 
+    <?xml version="1.0" encoding="UTF-8"?>
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+        <localRepository>/home/jenkins/maven-repo</localRepository>
+        <mirrors>
+                <mirror>
+                        <id>aliyunmaven</id>
+                        <mirrorOf>*</mirrorOf>
+                        <url>https://maven.aliyun.com/repository/public</url>
+                </mirror>
+        </mirrors>
+        <pluginGroups>
+                <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+        </pluginGroups>
+
+        <profiles>
+                <profile>
+                        <id>default</id>
+                        <activation>
+                                <activeByDefault>true</activeByDefault>
+                                <jdk>1.8</jdk>
+                        </activation>
+                        <properties>
+                                <sonar.host.url>http://sonarqube:9000</sonar.host.url>
+                        </properties>
+                </profile>
+        </profiles>
+    </settings>
