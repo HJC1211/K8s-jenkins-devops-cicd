@@ -13,7 +13,7 @@ Kubernetes 与 Jenkins 构建的自动化交付平台，旨在实现 SpringBoot 
 | GitLab    | [http://192.168.142.152:28080](https://link.wtturl.cn/?target=http%3A%2F%2F192.168.142.152%3A28080&scene=im&aid=497858&lang=zh) | 业务代码仓库，配置 Webhook 回调 Jenkins                    |
 | Jenkins   | http://192.168.142.152:31783                                 | 执行流水线任务                                             |
 | SonarQube | [http://192.168.142.152:32267](https://link.wtturl.cn/?target=http%3A%2F%2F192.168.142.152%3A32267&scene=im&aid=497858&lang=zh) | 代码质量扫描，配置质量门禁                                 |
-| Harbor    | 192.168.142.156:8858                                         | 私有镜像仓库                                               |
+| Harbor    | http://192.168.142.156:8858                                  | 私有镜像仓库                                               |
 | K8s 集群  | 内网 K8s集群                                                 | 运行 Jenkins 、动态 Agent Pod 及业务应用 (dev、production) |
 
 ## 流水线架构
@@ -87,12 +87,13 @@ Kubernetes 与 Jenkins 构建的自动化交付平台，旨在实现 SpringBoot 
 
 ### Jenkins 凭证配置
 
-| 凭证 ID                              | 凭证类型               | 作用                        |
-| ------------------------------------ | ---------------------- | --------------------------- |
-| harbor-user-pass                     | Username with password | Harbor 镜像仓库登录账号密码 |
-| git-user-pass                        | Username with password | GitLab 代码仓库访问账号密码 |
-| 9615b7f8-8237-45b5-a7aa-4ef1f209711c | Kubeconfig             | 访问目标 K8s 集群执行部署   |
-| sonarqube-token                      | Secret text            | SonarQube 服务访问认证令牌  |
+| 凭证 ID                              | 凭证类型               | 作用                                                      |
+| ------------------------------------ | ---------------------- | --------------------------------------------------------- |
+| harbor-user-pass                     | Username with password | Harbor 镜像仓库登录账号密码                               |
+| gitlab-token                         | GitLab API token       | GitLab API 令牌,用于 Jenkins 与 GitLab 的全局双向通信连接 |
+| git-user-pass                        | Username with password | GitLab 代码仓库访问账号密码                               |
+| 9615b7f8-8237-45b5-a7aa-4ef1f209711c | Kubeconfig             | 访问目标 K8s 集群执行部署                                 |
+| sonarqube-token                      | Secret text            | SonarQube 服务访问认证令牌                                |
 
 ### Jenkins 系统配置
 
