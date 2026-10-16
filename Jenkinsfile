@@ -19,17 +19,20 @@ pipeline {
         SONAR_SERVER_URL = '192.168.142.152:32267'
         SONAR_CREDENTIAL_ID = 'sonarqube-token'
     }
-     stage('checkout scm') {
+     stages{
+         stage('checkout scm') {
             steps {
                 checkout scmGit(branches: [[name: "$BRANCH_NAME"]], extensions: [], userRemoteConfigs: [[credentialsId: "$GIT_CREDENTIAL_ID", url: 'http://192.168.142.152:28080/gitlab-instance-a1f2e959/k8s-cicd.git']])
             }
         }
+     }
     stages {
         stage('unit test') {
             steps {
                 sh 'mvn clean test'
             }
         }
+    stages{
         stage('sonarqube analysis') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
@@ -42,6 +45,8 @@ pipeline {
                 }
             }
         }
+    }
+    stages{
         stage('build & push') {
             steps {
                 sh 'mvn clean package -DskipTests '
@@ -51,13 +56,17 @@ pipeline {
                     sh 'docker push $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BUILD_NUMBER'
                 }
             }
-        }
+         }
+    }
+    stages{    
         stage('push latest') {
             steps {
                 sh 'docker tag $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BUILD_NUMBER $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:latest'
                 sh 'docker push $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:latest'
             }
         }
+    }
+    stages{
         stage('deploy to dev') {
             steps {
                 input(id: 'deploy-to-dev', message: 'deploy to dev?')
@@ -70,6 +79,8 @@ pipeline {
                 '''
             }
         }
+    }
+    stages{
         stage('push with tag') {
             when {
                 expression { return params.TAG_NAME =~ /v.*/ }
@@ -86,6 +97,8 @@ pipeline {
                 sh 'docker push $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME'
             }
         }
+    }
+    stages{
         stage('deploy to production') {
             when {
                 expression { return params.TAG_NAME =~ /v.*/ }
