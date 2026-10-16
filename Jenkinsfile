@@ -32,6 +32,7 @@ pipeline {
                 sh 'mvn clean test'
             }
         }
+    }
     stages{
         stage('sonarqube analysis') {
             steps {
